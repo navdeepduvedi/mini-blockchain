@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net"
+	"strings"
 )
 
 var listOfClients []*net.TCPConn
@@ -27,8 +28,8 @@ func startServer(address string) {
 			log.Println("Error accepting request:", err)
 		}
 
+		//storing client address connecting to server
 		listOfClients = append(listOfClients, tcp)
-		fmt.Println(listOfClients)
 		go handleRequest(connServer)
 	}
 
@@ -38,32 +39,22 @@ func handleRequest(conn net.Conn) {
 	for {
 		message, _ := bufio.NewReader(conn).ReadString('\n')
 		// output message received
-		fmt.Print("Message Received:", string(message))
 		// sample process for string received
 		// iterating over the listOfClients
-		fmt.Println(listOfClients)
+
 		for i := range listOfClients {
 			// sending message to all clients in the socket
 			_, err := listOfClients[i].Write([]byte(message))
 			if err != nil {
 				fmt.Println(err)
 			}
+			if strings.TrimSpace(string(message)) == "close" {
+				//closing connection to client
+
+				fmt.Println("ho")
+				break
+			}
 
 		}
 	}
 }
-
-// func broadCast(message string) {
-// 	print("broadcasting")
-// 	// iterating over the listOfClients
-
-// 	for i := range listOfClients {
-// 		// sending message to all clients in the socket
-// 		_, err := listOfClients[i].Write([]byte(message))
-// 		if err != nil {
-// 			fmt.Println(err)
-// 		}
-
-// 	}
-// 	print("broadcasting")
-// }
