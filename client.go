@@ -104,8 +104,7 @@ func writeToFile(receivedMessage []string, data []string, fileName *os.File) {
 		transactions[data[2]] += 1
 	}
 
-	if transactions[data[2]] >= 2 {
-		result, _ := fileName.WriteString(data[0] + "," + data[1] + "," + data[2] + "," + data[3])
-		fmt.Println(result)
+	if transactions[data[2]] >= 2 && transactions[data[2]] < 3 {
+		fileName.WriteString(data[0] + "," + data[1] + "," + data[2] + "\n")
 	}
 }
